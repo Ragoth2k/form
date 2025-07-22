@@ -1,0 +1,27 @@
+/* .form-container {
+  padding: 1.5rem;
+  border-radius: 10px;
+  background-color: #f8f1ff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+  color: #6c2eb9;
+}
+
+.form-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-container label {
+  font-weight: bold;
+}
+
+.form-container input,
+.form-container select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+} */

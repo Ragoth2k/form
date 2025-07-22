@@ -1,73 +1,54 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import './Form.css';
 
-function Form() {
+const Form = ({ onSubmit, initialData }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     gender: '',
-    country: ''
+    dob: '',
   });
 
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (initialData) {
+      setFormData(initialData);
+    }
+  }, [initialData]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError('');
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
-  const validatePhone = (phone) => /^[0-9]{10}$/.test(phone);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { name, email, phone, gender, country } = formData;
-
-    if (!name || !email || !phone || !gender || !country) {
-      setError('Please fill in all fields.');
-      return;
-    }
-
-    if (!validatePhone(phone)) {
-      setError('Phone number must be exactly 10 digits.');
-      return;
-    }
-
-    // Save to localStorage
-    const existing = JSON.parse(localStorage.getItem('submissions')) || [];
-    localStorage.setItem('submissions', JSON.stringify([...existing, formData]));
-
-    const query = new URLSearchParams(formData).toString();
-    navigate(`/result?${query}`);
-    setFormData({ name: '', email: '', phone: '', gender: '', country: '' });
+    onSubmit(formData);
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      gender: '',
+      dob: '',
+    });
   };
 
   return (
-    <div className="form-container">
-      <h2>🚀 Personal Details Form </h2>
-      {error && <p className="error-msg">{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input name="name" placeholder="Name" value={formData.name} onChange={handleChange} />
-        <input name="email" placeholder="Email" type="email" value={formData.email} onChange={handleChange} />
-        <input name="phone" placeholder="Phone Number" type="tel" value={formData.phone} onChange={handleChange} />
-        <select name="gender" value={formData.gender} onChange={handleChange}>
-          <option value="">Select Gender</option>
-          <option>Male</option>
-          <option>Female</option>
-          <option>Other</option>
-        </select>
-        <select name="country" value={formData.country} onChange={handleChange}>
-          <option value="">Select Country</option>
-          <option>India</option>
-          <option>USA</option>
-          <option>UK</option>
-          <option>Australia</option>
-        </select>
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+    <form className="form" onSubmit={handleSubmit}>
+      <h2>{initialData ? 'Edit Details' : 'Add Personal Details'}</h2>
+      <input name="name" value={formData.name} onChange={handleChange} placeholder="Name" required />
+      <input name="email" value={formData.email} onChange={handleChange} placeholder="Email" required />
+      <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Phone" required />
+      <select name="gender" value={formData.gender} onChange={handleChange} required>
+        <option value="">Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
+      <input name="dob" type="date" value={formData.dob} onChange={handleChange} required />
+      <button type="submit">{initialData ? 'Update' : 'Submit'}</button>
+    </form>
   );
-}
+};
 
 export default Form;
